@@ -48,6 +48,7 @@ def api():
 
     resp = make_response(retJson)
     resp.headers['content-type']="application/json"
+    resp.headers['Access-Control-Allow-Origin:']="*"
 
     # http://www.flaskapi.org/api-guide/status-codes/#successful-2xx
     return resp, 200
