@@ -190,7 +190,7 @@ def getDBTableData():
  
         # display the PostgreSQL database server version
         db_version = cur.fetchone()
-        print(db_version)                          
+        print(db_version[0])                          
 
         response = {
             'db_version': db_version
