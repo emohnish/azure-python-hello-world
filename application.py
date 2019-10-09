@@ -9,6 +9,8 @@ from azure.common.credentials import ServicePrincipalCredentials
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
+import psycopg2
+
 
 # for the api
 import json
@@ -148,6 +150,50 @@ def getSecret():
         response = {
             'secret_name': secret.name,
             'secret_value': secret.value
+        } 
+        
+        retdict['response']=response
+
+    except Exception as e:
+        msg = "Bad Request (400): "+str(e)
+        app.logger.info(msg)
+        # print(msg)
+        return msg,400
+    
+    retJson = json.dumps(retdict)
+    app.logger.info("retjson :"+retJson)
+
+    resp = make_response(retJson)
+    resp.headers['content-type']="application/json"
+    resp.headers['Access-Control-Allow-Origin']="*"
+
+    return resp, 200
+
+# The login method.
+@app.route("/getDBTableData", methods=["GET"])
+def getDBTableData():
+
+    retdict ={} 
+
+    try:
+        connection = psycopg2.connect(user = "adminuser",
+                                  password = "admin@123",
+                                  host = "postgresql-hackathon.postgres.database.azure.com",
+                                  port = "5432",
+                                  database = "postgres")
+
+        cur = connection.cursor()
+        
+        # execute a statement
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+ 
+        # display the PostgreSQL database server version
+        db_version = cur.fetchone()
+        print(db_version)                          
+
+        response = {
+            'db_version': db_version
         } 
         
         retdict['response']=response
