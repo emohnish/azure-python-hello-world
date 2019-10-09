@@ -68,10 +68,16 @@ def login():
         #input_string = request.args.get("input","[you forgot to feed in input]")
         app.logger.info("FAKE API CALL, userName = "+ userName)
 
+        authenticate = False
+
+        if ((userName == 'user1' and password == 'abc') 
+            or (userName == 'user2' and password == 'abc2')
+            or (userName == 'user3' and password == 'abc3')):
+            authenticate = True  
+
         response = {
             'userName': userName,
-            'password': password,
-            'authenticate': True
+            'authenticate': authenticate
         } 
         
         retdict['response']=response
