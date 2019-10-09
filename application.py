@@ -176,8 +176,14 @@ def getDBTableData():
     retdict ={} 
 
     try:
+
+        credential = DefaultAzureCredential()
+        secret_client = SecretClient(vault_endpoint='https://db-hackathon-keyvault.vault.azure.net', credential=credential)
+
+        secret = secret_client.get_secret("postgre-pwd")
+
         connection = psycopg2.connect(user = "adminuser@postgresql-hackathon",
-                                  password = "admin@123",
+                                  password = secret.value,
                                   host = "postgresql-hackathon.postgres.database.azure.com",
                                   port = "5432",
                                   database = "postgres")
@@ -190,10 +196,15 @@ def getDBTableData():
  
         # display the PostgreSQL database server version
         db_version = cur.fetchone()
-        print(db_version[0])                          
+        print(db_version[0])  
+
+        cur.execute('select username from employee where age < 40')       
+
+        username = cur.fetchone()                 
 
         response = {
-            'db_version': db_version
+            'db_version': db_version[0],
+            'username': username[0]
         } 
         
         retdict['response']=response
