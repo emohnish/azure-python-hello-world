@@ -176,7 +176,7 @@ def getDBTableData():
     retdict ={} 
 
     try:
-        connection = psycopg2.connect(user = "adminuser",
+        connection = psycopg2.connect(user = "adminuser@postgresql-hackathon",
                                   password = "admin@123",
                                   host = "postgresql-hackathon.postgres.database.azure.com",
                                   port = "5432",
