@@ -53,23 +53,24 @@ def api():
     # http://www.flaskapi.org/api-guide/status-codes/#successful-2xx
     return resp, 200
 
-    # The login method.
-@app.route("/login", methods=["POST"])
+# The login method.
+@app.route("/login", methods=["GET"])
 def login():
 
-    data = request.get_json(silent=True)
+    #data = request.get_json(silent=True)
 
-
+    userName = request.args.get("userName","[you forgot to feed in userName]")
+    password = request.args.get("password","[you forgot to feed in password]")
 
     retdict ={} 
 
     try:
         #input_string = request.args.get("input","[you forgot to feed in input]")
-        app.logger.info("FAKE API CALL, userName = "+ data['userName'])
+        app.logger.info("FAKE API CALL, userName = "+ userName)
 
         response = {
-            'userName': data['userName'],
-            'password': data['password'],
+            'userName': userName,
+            'password': password,
             'authenticate': True
         } 
         
