@@ -52,3 +52,40 @@ def api():
 
     # http://www.flaskapi.org/api-guide/status-codes/#successful-2xx
     return resp, 200
+
+    # The login method.
+@app.route("/login", methods=["POST"])
+def login():
+
+    data = request.get_json(silent=True)
+
+
+
+    retdict ={} 
+
+    try:
+        #input_string = request.args.get("input","[you forgot to feed in input]")
+        app.logger.info("FAKE API CALL, userName = "+ data['userName'])
+
+        response = {
+            'userName': data['userName'],
+            'password': data['password'],
+            'authenticate': True
+        } 
+        
+        retdict['response']=response
+
+    except Exception as e:
+        msg = "Bad Request (400): "+str(e)
+        app.logger.info(msg)
+        # print(msg)
+        return msg,400
+    
+    retJson = json.dumps(retdict)
+    app.logger.info("retjson :"+retJson)
+
+    resp = make_response(retJson)
+    resp.headers['content-type']="application/json"
+    resp.headers['Access-Control-Allow-Origin']="*"
+
+    return resp, 200
