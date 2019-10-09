@@ -145,14 +145,7 @@ def getSecret():
         
         ############
 
-        if ((userName == 'user1' and password == 'abc') 
-            or (userName == 'user2' and password == 'abc2')
-            or (userName == 'user3' and password == 'abc3')):
-            authenticate = True  
-
         response = {
-            'userName': userName,
-            'authenticate': authenticate,
             'secret_name': secret.name,
             'secret_value': secret.value
         } 
