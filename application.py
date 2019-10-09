@@ -3,6 +3,12 @@ from flask import Flask
 from flask import request
 from flask import make_response
 from flask import render_template
+from azure.keyvault import KeyVaultClient
+from azure.common.credentials import ServicePrincipalCredentials
+
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
 
 # for the api
 import json
@@ -65,6 +71,13 @@ def login():
     retdict ={} 
 
     try:
+
+        #Retrieving secret value from key vault
+
+
+        ############
+
+
         #input_string = request.args.get("input","[you forgot to feed in input]")
         app.logger.info("FAKE API CALL, userName = "+ userName)
 
@@ -78,6 +91,70 @@ def login():
         response = {
             'userName': userName,
             'authenticate': authenticate
+        } 
+        
+        retdict['response']=response
+
+    except Exception as e:
+        msg = "Bad Request (400): "+str(e)
+        app.logger.info(msg)
+        # print(msg)
+        return msg,400
+    
+    retJson = json.dumps(retdict)
+    app.logger.info("retjson :"+retJson)
+
+    resp = make_response(retJson)
+    resp.headers['content-type']="application/json"
+    resp.headers['Access-Control-Allow-Origin']="*"
+
+    return resp, 200
+
+
+# The login method.
+@app.route("/getSecret", methods=["GET"])
+def getSecret():
+
+    retdict ={} 
+
+    try:
+
+        #Retrieving secret value from key vault
+
+        #credentials = ServicePrincipalCredentials(
+#            client_id = 'dafcc756-612f-496a-a580-22014aff8ea5'
+ #           secret = '...',
+  #          tenant = '...'
+   #     )
+
+    #    client = KeyVaultClient(credentials)
+
+        # VAULT_URL must be in the format 'https://<vaultname>.vault.azure.net'
+        # SECRET_VERSION is required, and can be obtained with the KeyVaultClient.get_secret_versions(self, vault_url, secret_id) API
+     #   secret_bundle = client.get_secret('https://db-hackathon-keyvault.vault.azure.net/secrets/', 'user-pwd', '229dd206b576478793801a4d739f7c65')
+      #  secret = secret_bundle.value
+
+
+        credential = DefaultAzureCredential()
+        secret_client = SecretClient(vault_endpoint='https://db-hackathon-keyvault.vault.azure.net', credential=credential)
+
+        secret = secret_client.get_secret("user-pwd")
+
+        print(secret.name)
+        print(secret.value)
+        
+        ############
+
+        if ((userName == 'user1' and password == 'abc') 
+            or (userName == 'user2' and password == 'abc2')
+            or (userName == 'user3' and password == 'abc3')):
+            authenticate = True  
+
+        response = {
+            'userName': userName,
+            'authenticate': authenticate,
+            'secret_name': secret.name,
+            'secret_value': secret.value
         } 
         
         retdict['response']=response
