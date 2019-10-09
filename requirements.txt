@@ -4,3 +4,4 @@ gunicorn
 azure-identity
 azure-keyvault
 azure-keyvault-secrets
+psycopg2`
